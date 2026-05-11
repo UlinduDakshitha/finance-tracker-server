@@ -2,6 +2,7 @@ package com.financetracker.backend.controller;
 import com.financetracker.backend.dto.request.TransactionRequest;
 import com.financetracker.backend.dto.response.TransactionResponse;
 import com.financetracker.backend.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<TransactionResponse> createTransaction(
             @RequestHeader("X-User-Email") String email,
-            @RequestBody TransactionRequest request
+            @Valid @RequestBody TransactionRequest request
     ) {
         return ResponseEntity.ok(transactionService.createTransaction(email, request));
     }

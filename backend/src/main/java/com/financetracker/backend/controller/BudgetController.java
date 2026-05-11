@@ -2,6 +2,7 @@ package com.financetracker.backend.controller;
 import com.financetracker.backend.dto.request.BudgetRequest;
 import com.financetracker.backend.dto.response.BudgetResponse;
 import com.financetracker.backend.service.BudgetService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class BudgetController {
     @PostMapping
     public ResponseEntity<BudgetResponse> createBudget(
             @RequestHeader("X-User-Email") String email,
-            @RequestBody BudgetRequest request
+           @Valid @RequestBody BudgetRequest request
     ) {
         return ResponseEntity.ok(budgetService.createBudget(email, request));
     }

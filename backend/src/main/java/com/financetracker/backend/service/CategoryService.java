@@ -23,7 +23,7 @@ public class CategoryService {
 
     public CategoryResponse createCategory(String email, CategoryRequest request) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Category category = Category.builder()
                 .user(user)

@@ -3,6 +3,7 @@ package com.financetracker.backend.controller;
 import com.financetracker.backend.dto.request.CategoryRequest;
 import com.financetracker.backend.dto.response.CategoryResponse;
 import com.financetracker.backend.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(
             @RequestHeader("X-User-Email") String email,
-            @RequestBody CategoryRequest request
+           @Valid @RequestBody CategoryRequest request
     ) {
         return ResponseEntity.ok(categoryService.createCategory(email, request));
     }
