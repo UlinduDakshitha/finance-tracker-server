@@ -1,5 +1,5 @@
 package com.financetracker.backend.service;
-import com.financetracker.backend.dto.*;
+// ...existing code... (removed unused/wrong wildcard import)
 import com.financetracker.backend.dto.response.CategorySpendingResponse;
 import com.financetracker.backend.dto.response.DashboardResponse;
 import com.financetracker.backend.dto.response.MonthlyTrendResponse;

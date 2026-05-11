@@ -51,13 +51,7 @@ public class TransactionController {
         return ResponseEntity.ok("Transaction deleted successfully");
     }
 
-    @GetMapping("/filter/type")
-    public ResponseEntity<List<TransactionResponse>> filterByType(
-            @RequestHeader("X-User-Email") String email,
-            @RequestParam String type
-    ) {
-        return ResponseEntity.ok(transactionService.filterByType(email, type));
-    }
+    // ...existing code... (removed duplicate header-based filterByType)
     @GetMapping("/filter/type")
     public ResponseEntity<List<TransactionResponse>> filterByType(
             Authentication authentication,
