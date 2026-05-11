@@ -5,6 +5,7 @@ import com.financetracker.backend.dto.response.CategoryResponse;
 import com.financetracker.backend.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,42 +23,41 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(
-            @RequestHeader("X-User-Email") String email,
-           @Valid @RequestBody CategoryRequest request
+            Authentication authentication,
+            @Valid @RequestBody CategoryRequest request
     ) {
-        return ResponseEntity.ok(categoryService.createCategory(email, request));
+        return ResponseEntity.ok(categoryService.createCategory(authentication.getName(), request));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(
-            @RequestHeader("X-User-Email") String email
-    ) {
-        return ResponseEntity.ok(categoryService.getAllCategories(email));
+    public ResponseEntity<List<CategoryResponse>> getAllCategories(Authentication authentication) {
+        return ResponseEntity.ok(categoryService.getAllCategories(authentication.getName()));
     }
 
     @GetMapping("/type")
     public ResponseEntity<List<CategoryResponse>> getCategoriesByType(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @RequestParam String type
     ) {
-        return ResponseEntity.ok(categoryService.getCategoriesByType(email, type));
+        return ResponseEntity.ok(categoryService.getCategoriesByType(authentication.getName(), type));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @PathVariable Long id,
-            @RequestBody CategoryRequest request
+            @Valid @RequestBody CategoryRequest request
     ) {
-        return ResponseEntity.ok(categoryService.updateCategory(email, id, request));
+        return ResponseEntity.ok(categoryService.updateCategory(authentication.getName(), id, request));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @PathVariable Long id
     ) {
-        categoryService.deleteCategory(email, id);
+        categoryService.deleteCategory(authentication.getName(), id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 }

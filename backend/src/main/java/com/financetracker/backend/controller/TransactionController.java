@@ -4,8 +4,8 @@ import com.financetracker.backend.dto.response.TransactionResponse;
 import com.financetracker.backend.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,34 +22,32 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionResponse> createTransaction(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @Valid @RequestBody TransactionRequest request
     ) {
-        return ResponseEntity.ok(transactionService.createTransaction(email, request));
+        return ResponseEntity.ok(transactionService.createTransaction(authentication.getName(), request));
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> getAllTransactions(
-            @RequestHeader("X-User-Email") String email
-    ) {
-        return ResponseEntity.ok(transactionService.getAllTransactions(email));
+    public ResponseEntity<List<TransactionResponse>> getAllTransactions(Authentication authentication) {
+        return ResponseEntity.ok(transactionService.getAllTransactions(authentication.getName()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionResponse> updateTransaction(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @PathVariable Long id,
-            @RequestBody TransactionRequest request
+            @Valid @RequestBody TransactionRequest request
     ) {
-        return ResponseEntity.ok(transactionService.updateTransaction(email, id, request));
+        return ResponseEntity.ok(transactionService.updateTransaction(authentication.getName(), id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTransaction(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @PathVariable Long id
     ) {
-        transactionService.deleteTransaction(email, id);
+        transactionService.deleteTransaction(authentication.getName(), id);
         return ResponseEntity.ok("Transaction deleted successfully");
     }
 
@@ -60,21 +58,28 @@ public class TransactionController {
     ) {
         return ResponseEntity.ok(transactionService.filterByType(email, type));
     }
+    @GetMapping("/filter/type")
+    public ResponseEntity<List<TransactionResponse>> filterByType(
+            Authentication authentication,
+            @RequestParam String type
+    ) {
+        return ResponseEntity.ok(transactionService.filterByType(authentication.getName(), type));
+    }
 
     @GetMapping("/filter/category")
     public ResponseEntity<List<TransactionResponse>> filterByCategory(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @RequestParam String categoryName
     ) {
-        return ResponseEntity.ok(transactionService.filterByCategory(email, categoryName));
+        return ResponseEntity.ok(transactionService.filterByCategory(authentication.getName(), categoryName));
     }
 
     @GetMapping("/filter/date")
     public ResponseEntity<List<TransactionResponse>> filterByDateRange(
-            @RequestHeader("X-User-Email") String email,
+            Authentication authentication,
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
     ) {
-        return ResponseEntity.ok(transactionService.filterByDateRange(email, startDate, endDate));
+        return ResponseEntity.ok(transactionService.filterByDateRange(authentication.getName(), startDate, endDate));
     }
 }

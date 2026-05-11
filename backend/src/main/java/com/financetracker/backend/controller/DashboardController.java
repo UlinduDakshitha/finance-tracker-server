@@ -2,6 +2,7 @@ package com.financetracker.backend.controller;
 import com.financetracker.backend.dto.response.DashboardResponse;
 import com.financetracker.backend.service.DashboardService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +17,7 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<DashboardResponse> getDashboardSummary(
-            @RequestHeader("X-User-Email") String email
-    ) {
-        return ResponseEntity.ok(dashboardService.getDashboard(email));
+    public ResponseEntity<DashboardResponse> getDashboardSummary(Authentication authentication) {
+        return ResponseEntity.ok(dashboardService.getDashboard(authentication.getName()));
     }
 }
