@@ -1,11 +1,13 @@
 package com.financetracker.backend.dto.request;
+
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class BudgetRequest {
-    @NotBlank(message = "Category name is required")
-    private String categoryName;
+
+    @NotNull(message = "Category ID is required")
+    private Long categoryId;
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be positive")

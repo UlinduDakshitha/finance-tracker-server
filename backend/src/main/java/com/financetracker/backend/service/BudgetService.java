@@ -1,4 +1,5 @@
 package com.financetracker.backend.service;
+
 import com.financetracker.backend.dto.request.BudgetRequest;
 import com.financetracker.backend.dto.response.BudgetResponse;
 import com.financetracker.backend.entity.Budget;
@@ -36,11 +37,7 @@ public class BudgetService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Category category = categoryRepository.findByUserAndType(user, "EXPENSE")
-                .stream()
-                .filter(c -> c.getName().equalsIgnoreCase(request.getCategoryName()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = resolveExpenseCategory(user, request.getCategoryId());
 
         Budget budget = Budget.builder()
                 .user(user)
@@ -53,7 +50,6 @@ public class BudgetService {
                 .build();
 
         Budget saved = budgetRepository.save(budget);
-
         return buildBudgetResponse(saved);
     }
 
@@ -74,11 +70,7 @@ public class BudgetService {
         Budget budget = budgetRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new RuntimeException("Budget not found"));
 
-        Category category = categoryRepository.findByUserAndType(user, "EXPENSE")
-                .stream()
-                .filter(c -> c.getName().equalsIgnoreCase(request.getCategoryName()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = resolveExpenseCategory(user, request.getCategoryId());
 
         budget.setCategory(category);
         budget.setAmount(request.getAmount());
@@ -87,7 +79,6 @@ public class BudgetService {
         budget.setYear(request.getYear());
 
         Budget updated = budgetRepository.save(budget);
-
         return buildBudgetResponse(updated);
     }
 
@@ -99,6 +90,21 @@ public class BudgetService {
                 .orElseThrow(() -> new RuntimeException("Budget not found"));
 
         budgetRepository.delete(budget);
+    }
+
+    private Category resolveExpenseCategory(User user, Long categoryId) {
+        if (categoryId == null) {
+            throw new RuntimeException("Category ID is required");
+        }
+
+        Category category = categoryRepository.findByIdAndUser(categoryId, user)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        if (!"EXPENSE".equalsIgnoreCase(category.getType())) {
+            throw new RuntimeException("Selected category must be EXPENSE");
+        }
+
+        return category;
     }
 
     private BudgetResponse buildBudgetResponse(Budget budget) {

@@ -1,4 +1,5 @@
 package com.financetracker.backend.controller;
+
 import com.financetracker.backend.dto.request.BudgetRequest;
 import com.financetracker.backend.dto.response.BudgetResponse;
 import com.financetracker.backend.service.BudgetService;
@@ -27,7 +28,6 @@ public class BudgetController {
     ) {
         return ResponseEntity.ok(budgetService.createBudget(authentication.getName(), request));
     }
-
 
     @GetMapping
     public ResponseEntity<List<BudgetResponse>> getAllBudgets(Authentication authentication) {
